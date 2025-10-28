@@ -1,0 +1,22 @@
+local player = game:GetService("Players").LocalPlayer
+
+local wlFolder = player:WaitForChild("WL", 5)
+
+if not wlFolder then
+	warn("[WL] Aucun dossier 'WL' trouvé dans le joueur.")
+	return
+end
+
+for _, obj in ipairs(wlFolder:GetChildren()) do
+	if obj:IsA("BoolValue") then
+		obj.Value = true
+		print("[WL] Bool activé :", obj.Name)
+	end
+end
+
+wlFolder.ChildAdded:Connect(function(child)
+	if child:IsA("BoolValue") then
+		child.Value = true
+		print("[WL] Nouveau Bool détecté et activé :", child.Name)
+	end
+end)
