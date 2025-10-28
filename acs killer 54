@@ -1,0 +1,15 @@
+
+local Settings = {
+    ["ExplosiveHit"] = true,
+    ["ExPressure"] = math.huge,
+    ["ExpRadius"] = math.huge,
+    ["DestroyJointRadiusPercent"] = math.huge,
+    ["ExplosionDamage"] = math.huge,
+}
+ 
+for i,v in pairs(game:GetDescendants()) do
+    if v:IsA("MeshPart") or v:IsA("Part") then
+        game.ReplicatedStorage.ACS_Engine.EEventosss.Hit:FireServer(v.Position, v, v.Position, Enum.Material.Plastic, Settings)
+    end
+end
+ 
