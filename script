@@ -1,63 +1,6 @@
-local ADD_AMOUNT = 100000
+local RE = game.ReplicatedStorage.RemoteEvent
 
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
-
-local added = false
-
-local function findNumericStat(folder)
-	local names = {"Money", "Argent", "Cash", "Coins"}
-	for _, name in ipairs(names) do
-		local v = folder:FindFirstChild(name)
-		if v and (v:IsA("IntValue") or v:IsA("NumberValue")) then
-			return v
-		end
-	end
-	local v = folder:FindFirstChildWhichIsA("IntValue") or folder:FindFirstChildWhichIsA("NumberValue")
-	return v
-end
-
-local function addLocalMoney()
-	if added then return end
-	added = true
-
-	local leaderstats = player:FindFirstChild("leaderstats")
-	if not leaderstats then
-		-- si leaderstats n'existe pas côté serveur, on crée un dossier local
-		leaderstats = Instance.new("Folder")
-		leaderstats.Name = "leaderstats"
-		leaderstats.Parent = player
-	end
-
-	local stat = findNumericStat(leaderstats)
-	if not stat then
-		stat = Instance.new("IntValue")
-		stat.Name = "Money"
-		stat.Value = 0
-		stat.Parent = leaderstats
-	end
-
-	local before = stat.Value
-	stat.Value = before + ADD_AMOUNT
-	print(("Ajout local de %d à %s (avant: %d, après: %d)"):format(ADD_AMOUNT, stat.Name, before, stat.Value))
-end
-
-if player:FindFirstChild("leaderstats") then
-	addLocalMoney()
-else
-	local conn
-	conn = player.ChildAdded:Connect(function(child)
-		if child.Name == "leaderstats" then
-			task.wait(0.1)
-			addLocalMoney()
-			conn:Disconnect()
-		end
-	end)
-
-	task.delay(2, function()
-		if not added then
-			addLocalMoney()
-			if conn and conn.Connected then conn:Disconnect() end
-		end
-	end)
+for i = 1, 50 do
+    RE:FireServer()
+    task.wait(0.1) 
 end
